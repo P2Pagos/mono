@@ -1,0 +1,12 @@
+{
+  "name": "@p2pay/template",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./module.js",
+  "exports": {
+    ".": "./module.js"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^4.0.0"
+  }
+}

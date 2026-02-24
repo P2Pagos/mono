@@ -1,0 +1,11 @@
+{
+  "name": "p2pay-mono-workspace",
+  "private": true,
+  "packageManager": "pnpm@9.12.3",
+  "scripts": {
+    "dev": "pnpm -C apps/mono dev",
+    "build": "pnpm -C apps/mono build",
+    "preview": "pnpm -C apps/mono preview",
+    "lint:noop": "node -e \"console.log('Add lint later')\""
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@p2pay/mono-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "preview": "nuxi preview"
+  },
+  "dependencies": {
+    "nuxt": "^4.0.0",
+    "@p2pay/mono": "workspace:*",
+    "@p2pay/template": "workspace:*"
+  }
+}

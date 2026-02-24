@@ -1,0 +1,8 @@
+node_modules
+.output
+.nuxt
+.dist
+.DS_Store
+.env
+.env.*
+pnpm-debug.log
