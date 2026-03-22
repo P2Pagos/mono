@@ -1,7 +1,8 @@
 export default defineNuxtConfig({
   modules: [
     // Workspace modules (local folders) for now
-    '@p2pay/mono',
-    '@p2pay/template'
+    '@p2payto/mono',
+    '@p2payto/template',
+    '@p2payto/peach'
   ]
 })

@@ -2,31 +2,29 @@ import { defineNuxtModule, addServerHandler, createResolver } from '@nuxt/kit'
 
 export default defineNuxtModule({
   meta: {
-    name: '@p2payto/template',
-    configKey: 'p2payTemplateRail'
+    name: '@p2payto/peach',
+    configKey: 'p2payPeachRail'
   },
   defaults: {
     enabled: true,
-    routeBase: '/rails/template'
+    routeBase: '/rails/peach'
   },
   setup(options, nuxt) {
     if (options.enabled === false) return
 
     const resolver = createResolver(import.meta.url)
 
-    // Page at /rails/template
     nuxt.hook('pages:extend', (pages) => {
       pages.push({
-        name: 'p2pay-rail-template',
+        name: 'p2pay-rail-peach',
         path: options.routeBase,
-        file: resolver.resolve('./runtime/pages/template.vue')
+        file: resolver.resolve('./runtime/pages/peach.vue')
       })
     })
 
-    // API at /api/rails/template
     addServerHandler({
-      route: '/api/rails/template',
-      handler: resolver.resolve('./runtime/server/api/template.get.js')
+      route: '/api/rails/peach',
+      handler: resolver.resolve('./runtime/server/api/peach.get.js')
     })
   }
 })

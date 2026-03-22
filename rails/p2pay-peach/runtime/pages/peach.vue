@@ -1,11 +1,11 @@
 <template>
   <main style="padding: 24px; font-family: ui-sans-serif, system-ui;">
-    <h1>@p2payto/mono injected page</h1>
+    <h1>@p2payto/peach injected rail page</h1>
     <p>API says: <strong>{{ data?.message }}</strong></p>
-    <p><small>Source: <code>/api/mono</code></small></p>
+    <p><small>Source: <code>/api/rails/peach</code></small></p>
   </main>
 </template>
 
 <script setup>
-const { data } = await useFetch('/api/mono')
+const { data } = await useFetch('/api/rails/peach')
 </script>

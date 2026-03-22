@@ -2,14 +2,14 @@ import { defineNuxtModule, addServerHandler, createResolver } from '@nuxt/kit'
 
 export default defineNuxtModule({
   meta: {
-    name: '@p2pay/mono',
+    name: '@p2payto/mono',
     configKey: 'p2payMono'
   },
   defaults: {
     enabled: true,
     routeBase: '/mono'
   },
-  setup (options, nuxt) {
+  setup(options, nuxt) {
     if (options.enabled === false) return
 
     const resolver = createResolver(import.meta.url)

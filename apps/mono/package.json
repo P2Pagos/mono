@@ -1,5 +1,7 @@
 {
-  "name": "@p2pay/mono-app",
+  "name": "@p2payto/mono-app",
+  "author": "p2pay",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +11,8 @@
   },
   "dependencies": {
     "nuxt": "^4.0.0",
-    "@p2pay/mono": "workspace:*",
-    "@p2pay/template": "workspace:*"
+    "@p2payto/mono": "workspace:*",
+    "@p2payto/template": "workspace:*",
+    "@p2payto/peach": "workspace:*"
   }
 }

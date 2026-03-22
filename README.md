@@ -5,6 +5,7 @@ This workspace contains:
 - `apps/mono` — standalone Nuxt app that **uses** the mono module and a template rail.
 - `packages/mono` — Nuxt module: exposes an API endpoint and injects a page.
 - `rails/p2pay-template` — Nuxt module (rail template): exposes an API endpoint and injects a page.
+- `rails/p2pay-peach` — Nuxt module (Peach rail): exposes an API endpoint and injects a page.
 - Empty placeholders: `flows/`, `utils/`, `apps/`
 
 ## Quick start
@@ -16,8 +17,9 @@ pnpm dev
 
 Open:
 - `http://localhost:3000/` (standalone app)
-- `http://localhost:3000/mono` (page injected by `@p2pay/mono`)
-- `http://localhost:3000/rails/template` (page injected by `@p2pay/template`)
+- `http://localhost:3000/mono` (page injected by `@p2payto/mono`)
+- `http://localhost:3000/rails/template` (page injected by `@p2payto/template`)
+- `http://localhost:3000/rails/peach` (page injected by `@p2payto/peach`)
 
 ## Reference
 
