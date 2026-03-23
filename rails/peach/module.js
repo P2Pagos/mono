@@ -6,9 +6,12 @@ function toBool(v) {
 }
 
 const endpoints = [
-  { method: 'GET',  route: 'me',      file: 'me.get.js'      },
-  { method: 'POST', route: 'offer',   file: 'offer.post.js'  },
-  { method: 'GET',  route: 'matches', file: 'matches.get.js' },
+  { method: 'GET',  route: 'me',                      file: 'me.get.js'                     },
+  { method: 'POST', route: 'offer',                    file: 'offer.post.js'                 },
+  { method: 'GET',  route: 'trade-requests',           file: 'tradeRequests.get.js'          },
+  { method: 'POST', route: 'trade-request/accept',     file: 'tradeRequest.accept.post.js'   },
+  { method: 'GET',  route: 'contract',                 file: 'contract.get.js'               },
+  { method: 'POST', route: 'contract/confirm-payment', file: 'paymentConfirm.post.js'        },
 ]
 
 export default defineNuxtModule({
@@ -25,6 +28,7 @@ export default defineNuxtModule({
     peachPgpPrivateKey: undefined,
     peachPgpPublicKey: undefined,
     peachPgpPassphrase: undefined,
+    peachPaymentDetails: undefined,
     peachReferralCode: undefined,
     peachFeeRate: undefined,
     peachMaxPremium: undefined,
@@ -46,6 +50,10 @@ export default defineNuxtModule({
       options.peachPgpPublicKey ?? nuxt.options.runtimeConfig.peachPgpPublicKey ?? ''
     nuxt.options.runtimeConfig.peachPgpPassphrase =
       options.peachPgpPassphrase ?? nuxt.options.runtimeConfig.peachPgpPassphrase ?? ''
+    // JSON string of fiat payment details shared with sellers upon trade acceptance
+    // e.g. '{"type":"sepa","beneficiary":"John Doe","iban":"DE89...","bic":"COBADEFFXXX"}'
+    nuxt.options.runtimeConfig.peachPaymentDetails =
+      options.peachPaymentDetails ?? nuxt.options.runtimeConfig.peachPaymentDetails ?? '{}'
     nuxt.options.runtimeConfig.peachReferralCode =
       options.peachReferralCode ?? nuxt.options.runtimeConfig.peachReferralCode ?? ''
     nuxt.options.runtimeConfig.peachFeeRate =

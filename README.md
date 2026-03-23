@@ -90,6 +90,7 @@ The host app needs only two changes to add a module:
 | `NUXT_PEACH_PGP_PRIVATE_KEY` | _(required)_ | `@p2payto/peach` |
 | `NUXT_PEACH_PGP_PUBLIC_KEY` | _(required)_ | `@p2payto/peach` |
 | `NUXT_PEACH_PGP_PASSPHRASE` | _(required)_ | `@p2payto/peach` |
+| `NUXT_PEACH_PAYMENT_DETAILS` | `{}` | `@p2payto/peach` |
 | `NUXT_PEACH_REFERRAL_CODE` | _(empty)_ | `@p2payto/peach` |
 | `NUXT_PEACH_FEE_RATE` | `hourFee` | `@p2payto/peach` |
 | `NUXT_PEACH_MAX_PREMIUM` | `0` | `@p2payto/peach` |

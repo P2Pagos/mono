@@ -5,5 +5,5 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const { offerId } = getQuery(event)
   const token = await getAccessToken(config)
-  return peachFetch(`/v1/offer/${offerId}/matches`, { baseUrl: config.peachBaseUrl, token })
+  return peachFetch(`/v1/offer/${offerId}/tradeRequests`, { baseUrl: config.peachBaseUrl, token })
 })
