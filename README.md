@@ -2,6 +2,7 @@
 
 Monorepo pnpm workspace for the **p2pay** open-source multi-rail payment software.
 
+W
 Each workspace package is a self-contained Nuxt 4 module. The root app (`apps/mono`) assembles them by simply listing the packages in `nuxt.config.js` — no glue code required.
 
 ## Workspace layout
@@ -14,6 +15,12 @@ mono/
 ├── flows/         business flow modules
 └── utils/         shared utilities
 ```
+=======
+- `apps/mono` — standalone Nuxt app that **uses** the mono module and a template rail.
+- `packages/mono` — Nuxt module: exposes an API endpoint and injects a page.
+- `rails/template` — Nuxt module (rail template): exposes an API endpoint and injects a page.
+- `rails/peach` — Nuxt module (Peach rail): exposes an API endpoint and injects a page.
+- `flows/booking` - Nuxt module with the booking view on calendar.
 
 ## Quick start
 
