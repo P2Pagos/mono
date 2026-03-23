@@ -1,3 +1,21 @@
 # flows
 
-Placeholder.
+Business flow modules live under `flows/*`.
+
+Flows are richer than rails: they can ship pages, embeddable components, composables (auto-imported), and server handlers — all bundled in a single Nuxt 4 module. A flow represents a complete user-facing feature that spans both client and server.
+
+## Available flows
+
+| Package | Page(s) | Description |
+|---------|---------|-------------|
+| `@p2payto/booking` | `/flows/booking`, `/flows/booking/embed` | Booking/scheduling UI — calendar, time slots, optional extras, embeddable iframe variant with custom theming |
+| `@p2payto/robosats` | `/flows/robosats` | RoboSats P2P Bitcoin flow — client-side identity generation (token, PGP keypair, Nostr key) and server-side Tor SOCKS proxy to the coordinator onion |
+
+## Adding a new flow
+
+1. Create `flows/<name>/` with `package.json`, `module.js`, and `runtime/`
+2. Name the package `@p2payto/<name>` — no `-flow` suffix
+3. Use `addImportsDir` for composables, `addComponentsDir` for components, `addServerHandler` for API handlers, `pages:extend` for pages
+4. Add `"@p2payto/<name>": "workspace:*"` to the app's `package.json`
+5. Add `'@p2payto/<name>'` to the app's `nuxt.config.js` modules array
+6. Run `pnpm install`

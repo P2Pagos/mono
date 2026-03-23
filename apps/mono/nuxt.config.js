@@ -4,6 +4,7 @@ export default defineNuxtConfig({
     '@p2payto/mono',
     '@p2payto/template',
     '@p2payto/peach',
-    '@p2payto/booking-flow'
+    '@p2payto/booking',
+    '@p2payto/robosats'
   ]
 })
