@@ -1,7 +1,7 @@
-import { createHash } from 'crypto'
 import { getAccessToken } from '../lib/peachAuth.js'
-import { signAddress, getPublicKeyHash } from '../lib/bitcoinSigner.js'
+import { signAddress } from '../lib/bitcoinSigner.js'
 import { peachFetch } from '../lib/peachRequest.js'
+import { getPaymentDataHashes } from '../lib/getPaymentDataHashes.js'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
@@ -22,13 +22,13 @@ export default defineEventHandler(async (event) => {
     peachId
   )
 
-  // Stable payment-data hash for this merchant + payment method combination
-  const paymentDataHash = createHash('sha256')
-    .update(getPublicKeyHash(config.peachBitcoinMnemonic) + method)
-    .digest('hex')
+  // Hash the real payment identifier (IBAN, phone, etc.) from merchant payment details.
+  // Peach uses these hashes to privately match buyers and sellers without exposing raw data.
+  const paymentDetails = JSON.parse(config.peachPaymentDetails || '{}')
+  const hashes = getPaymentDataHashes(method, paymentDetails)
 
   const meansOfPayment = { [currency]: [method] }
-  const paymentData = { [method]: { hashes: [paymentDataHash] } }
+  const paymentData = { [method]: { hashes } }
   const sats = parseInt(parseFloat(amount) * 100_000_000)
 
   const { id: offerId } = await peachFetch('/v069/buyOffer/', {
