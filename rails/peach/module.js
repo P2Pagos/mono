@@ -16,7 +16,7 @@ const endpoints = [
 
 export default defineNuxtModule({
   meta: {
-    name: '@p2payto/peach',
+    name: '@p2pay/peach',
     configKey: 'p2payPeachRail'
   },
   defaults: {

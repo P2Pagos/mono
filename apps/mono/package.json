@@ -1,5 +1,5 @@
 {
-  "name": "@p2payto/mono-app",
+  "name": "@p2pay/mono-app",
   "author": "p2pay",
   "license": "MIT",
   "private": true,
@@ -11,10 +11,9 @@
   },
   "dependencies": {
     "nuxt": "^4.0.0",
-    "@p2payto/mono": "workspace:*",
-    "@p2payto/template": "workspace:*",
-    "@p2payto/peach": "workspace:*",
-    "@p2payto/booking": "workspace:*",
-    "@p2payto/robosats": "workspace:*"
+    "@p2pay/template": "workspace:*",
+    "@p2pay/peach": "workspace:*",
+    "@p2pay/booking": "workspace:*",
+    "@p2pay/robosats": "workspace:*"
   }
 }

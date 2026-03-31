@@ -14,7 +14,7 @@ const endpoints = [
 
 export default defineNuxtModule({
   meta: {
-    name: '@p2payto/robosats',
+    name: '@p2pay/robosats',
     configKey: 'p2payRobosatsRail'
   },
   defaults: {
