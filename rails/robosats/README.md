@@ -1,8 +1,8 @@
-# @p2pay/robosats
+# @p2payto/robosats
 
 Dual-mode module for the [RoboSats](https://robosats.com) P2P Bitcoin rail. Handles robot identity generation (token, PGP, Nostr keypair), order book queries, and offer creation.
 
-All coordinator communication is routed through `@p2pay/tor`, which this module installs automatically. No direct Tor/SOCKS dependency is required in the consuming app.
+All coordinator communication is routed through `@p2payto/tor`, which this module installs automatically. No direct Tor/SOCKS dependency is required in the consuming app.
 
 ## API routes
 
@@ -20,7 +20,7 @@ The tor proxy is available at `/api/tor/**` for client-side use.
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `NUXT_ROBOSATS_COORDINATOR_URL` | no | RoboSats default onion | Coordinator onion base URL |
-| `NUXT_TOR_PROXY_SECRET` | yes | — | Shared secret for the `@p2pay/tor` proxy |
+| `NUXT_TOR_PROXY_SECRET` | yes | — | Shared secret for the `@p2payto/tor` proxy |
 | `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL of the local Tor daemon |
 
 A running Tor daemon is required on the server.
@@ -30,14 +30,14 @@ A running Tor daemon is required on the server.
 ```json
 // package.json
 "dependencies": {
-  "@p2pay/robosats": "workspace:*"
+  "@p2payto/robosats": "workspace:*"
 }
 ```
 
 ```js
 // nuxt.config.js
 export default defineNuxtConfig({
-  modules: ['@p2pay/robosats'],
+  modules: ['@p2payto/robosats'],
   p2payRobosatsRail: {
     enabled: true,
     torProxySecret: process.env.NUXT_TOR_PROXY_SECRET,
@@ -46,7 +46,7 @@ export default defineNuxtConfig({
 })
 ```
 
-`@p2pay/tor` is installed automatically — no need to add it separately.
+`@p2payto/tor` is installed automatically — no need to add it separately.
 
 ## Standalone mode (Nitro)
 

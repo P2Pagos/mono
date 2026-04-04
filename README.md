@@ -26,9 +26,9 @@ Payment rail modules. Each injects pages, composables, and server handlers into 
 
 | Package | Page | API |
 |---------|------|-----|
-| `@p2pay/template` (`rails/template`) | `/rails/template` | `/api/rails/template` |
-| `@p2pay/peach` (`rails/peach`) | `/rails/peach` | `/api/rails/peach/*` |
-| `@p2pay/robosats` (`rails/robosats`) | `/rails/robosats` | `/api/rails/robosats/*` |
+| `@p2payto/template` (`rails/template`) | `/rails/template` | `/api/rails/template` |
+| `@p2payto/peach` (`rails/peach`) | `/rails/peach` | `/api/rails/peach/*` |
+| `@p2payto/robosats` (`rails/robosats`) | `/rails/robosats` | `/api/rails/robosats/*` |
 
 ### Flows
 
@@ -36,7 +36,7 @@ Higher-level feature modules with pages and UI components.
 
 | Package | Pages |
 |---------|-------|
-| `@p2pay/booking` (`flows/booking`) | `/flows/booking`, `/flows/booking/embed` |
+| `@p2payto/booking` (`flows/booking`) | `/flows/booking`, `/flows/booking/embed` |
 
 ### Services
 
@@ -44,8 +44,8 @@ Infrastructure modules that run as both a standalone Nitro app and an embeddable
 
 | Package | Routes | Notes |
 |---------|--------|-------|
-| `@p2pay/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Tor reverse proxy, disabled by default |
-| `@p2pay/market` (`services/market`) | `/api/market/**` | KYC-free offer aggregator (Bisq, RoboSats, Peach), disabled by default |
+| `@p2payto/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Tor reverse proxy, disabled by default |
+| `@p2payto/market` (`services/market`) | `/api/market/**` | KYC-free offer aggregator (Bisq, RoboSats, Peach), disabled by default |
 
 ## What this is not
 
@@ -66,8 +66,8 @@ pnpm preview
 
 The root Nuxt app (`nuxt.config.js`) lists workspace modules in the `modules` array. Each module auto-registers its pages, composables, and server handlers when the app starts. Adding a module requires two changes:
 
-1. Add `"@p2pay/<name>": "workspace:*"` to root `package.json` dependencies
-2. Add `'@p2pay/<name>'` to the `modules` array in `nuxt.config.js`
+1. Add `"@p2payto/<name>": "workspace:*"` to root `package.json` dependencies
+2. Add `'@p2payto/<name>'` to the `modules` array in `nuxt.config.js`
 
 `flows/booking` requires `@nuxt/ui`. It must be present in `nuxt.config.js` before or alongside the booking module.
 
@@ -85,7 +85,7 @@ The root Nuxt app (`nuxt.config.js`) lists workspace modules in the `modules` ar
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `NUXT_ROBOSATS_COORDINATOR_URL` | no | RoboSats default onion | Coordinator onion base URL |
-| `NUXT_TOR_PROXY_SECRET` | yes | — | Shared secret for the embedded `@p2pay/tor` proxy |
+| `NUXT_TOR_PROXY_SECRET` | yes | — | Shared secret for the embedded `@p2payto/tor` proxy |
 | `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL of the local Tor daemon |
 
 ### `rails/peach`

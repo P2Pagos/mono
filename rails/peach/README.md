@@ -1,4 +1,4 @@
-# @p2pay/peach
+# @p2payto/peach
 
 Dual-mode module for the [Peach](https://peachbitcoin.com) P2P Bitcoin rail. Handles offer creation, trade requests, contract management, and payment confirmation using BIP32 key derivation and PGP signing.
 
@@ -31,14 +31,14 @@ Dual-mode module for the [Peach](https://peachbitcoin.com) P2P Bitcoin rail. Han
 ```json
 // package.json
 "dependencies": {
-  "@p2pay/peach": "workspace:*"
+  "@p2payto/peach": "workspace:*"
 }
 ```
 
 ```js
 // nuxt.config.js
 export default defineNuxtConfig({
-  modules: ['@p2pay/peach'],
+  modules: ['@p2payto/peach'],
   p2payPeachRail: {
     enabled: true
   }

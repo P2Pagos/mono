@@ -2,7 +2,7 @@ import { defineNuxtModule, createResolver, addComponentsDir, addImportsDir } fro
 
 export default defineNuxtModule({
   meta: {
-    name: '@p2pay/booking',
+    name: '@p2payto/booking',
     configKey: 'p2payBookingFlow'
   },
   defaults: {
