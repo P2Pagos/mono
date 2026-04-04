@@ -17,7 +17,7 @@ const fetchBisqOffers = async (currency) => {
     timeout: { request: 20000 },
     headers: {
       accept: 'application/json',
-      'user-agent': 'kyc-free-bitcoin-price/1.0'
+      'user-agent': 'p2pay'
     }
   })
 

@@ -35,10 +35,11 @@ export default defineNuxtModule({
     const resolver = createResolver(import.meta.url)
     const prefix = String(options.prefix || '/api/market').replace(/\/+$/, '')
 
+    // Scope the CORS middleware to the market prefix only, not the entire app
     for (const mw of middlewareDefs) {
       addServerHandler({
         middleware: true,
-        route: '/',
+        route: prefix,
         handler: resolver.resolve(`../runtime/middleware/${mw.file}`)
       })
     }

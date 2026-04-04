@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
   modules: [
-    // Workspace modules (local folders) for now
+    '@nuxt/ui',
     '@p2pay/template',
     '@p2pay/peach',
     '@p2pay/booking',

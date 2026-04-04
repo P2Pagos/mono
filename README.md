@@ -1,89 +1,75 @@
 # p2pay/mono
 
-Monorepo pnpm workspace for the **P2Pay** open-source multi-rail payment software.
+`mono` is the orchestrator repo for [P2Pay](https://p2pay.to). It assembles payment rails, business flows, and support services into a single Nuxt-based workspace.
 
-Each workspace package is a self-contained module. Apps assemble rails, flows, and services by listing them in `nuxt.config.js`, with minimal glue code. Services and rails also run standalone as Nitro servers.
+This repository is still being cleaned up and should be read as an early orchestrator base, not as a finished product.
 
-## Workspace layout
+## Structure
 
-```text
-mono/
-├── apps/       standalone Nuxt applications
-├── rails/      payment rail modules
-├── flows/      business flow modules
-├── services/   infrastructure service modules
-├── utils/      shared utilities
-└── packages/   (reserved)
+```
+/
+├── nuxt.config.js      root Nuxt app — loads all workspace modules
+├── app.vue
+├── pages/
+├── server/
+├── rails/              payment rail modules
+├── flows/              business flow modules
+├── services/           infrastructure service modules
+└── utils/              shared utilities
 ```
 
-## Apps
+## What exists today
 
-| Package | Description |
-|---------|-------------|
-| `@p2pay/mono-app` (`apps/mono`) | Development app — loads all workspace modules for local testing |
+### Rails
 
-## Rails
+Payment rail modules. Each injects pages, composables, and server handlers into the host app, and can also run standalone as a Nitro server.
 
-Rails are pluggable payment-rail modules. Each injects pages, composables, and server handlers into the host app, and can also run standalone as a Nitro server.
+| Package | Page | API |
+|---------|------|-----|
+| `@p2pay/template` (`rails/template`) | `/rails/template` | `/api/rails/template` |
+| `@p2pay/peach` (`rails/peach`) | `/rails/peach` | `/api/rails/peach/*` |
+| `@p2pay/robosats` (`rails/robosats`) | `/rails/robosats` | `/api/rails/robosats/*` |
 
-| Package | Page | API | Description |
-|---------|------|-----|-------------|
-| `@p2pay/template` (`rails/template`) | `/rails/template` | `/api/rails/template` | Reference rail — copy this to scaffold a new integration |
-| `@p2pay/peach` (`rails/peach`) | `/rails/peach` | `/api/rails/peach/*` | [Peach](https://peachbitcoin.com) P2P Bitcoin rail |
-| `@p2pay/robosats` (`rails/robosats`) | `/rails/robosats` | `/api/rails/robosats/*` | [RoboSats](https://robosats.com) P2P Bitcoin rail — installs `@p2pay/tor` automatically |
+### Flows
 
-## Flows
+Higher-level feature modules with pages and UI components.
 
-Flows are higher-level feature modules: pages, components, composables, and server handlers in one package.
+| Package | Pages |
+|---------|-------|
+| `@p2pay/booking` (`flows/booking`) | `/flows/booking`, `/flows/booking/embed` |
 
-| Package | Page(s) | Description |
-|---------|---------|-------------|
-| `@p2pay/booking` (`flows/booking`) | `/flows/booking`, `/flows/booking/embed` | Booking/scheduling UI with calendar, time slots, and embeddable iframe variant |
+### Services
 
-## Services
+Infrastructure modules that run as both a standalone Nitro app and an embeddable Nuxt module.
 
-Services ship as both a **standalone Nitro app** and a **Nuxt module** embeddable into any app in the workspace.
+| Package | Routes | Notes |
+|---------|--------|-------|
+| `@p2pay/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Tor reverse proxy, disabled by default |
+| `@p2pay/market` (`services/market`) | `/api/market/**` | KYC-free offer aggregator (Bisq, RoboSats, Peach), disabled by default |
 
-| Package | Routes | Description |
-|---------|--------|-------------|
-| `@p2pay/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Generic Tor reverse proxy — target onion URL set per-request via `X-Tor-Target` header |
-| `@p2pay/cors` (`services/cors`) | `/api/cors`, `/api/cors/**` | CORS reverse proxy — proxies a configured target API with secret-based auth |
-| `@p2pay/market` (`services/market`) | `/api/market/**` | KYC-free Bitcoin price aggregator — buy/sell offers from Bisq, RoboSats, Peach |
+## What this is not
 
-## Quick start
+- Not a finished marketplace
+- Not a polished public SDK
+- Not stable enough yet to promise broad production use
+
+## Local development
 
 ```bash
 pnpm install
-pnpm dev           # runs apps/mono
+pnpm dev
+pnpm build
+pnpm preview
 ```
 
-## Module anatomy
+## Module loading
 
-Services follow this structure:
+The root Nuxt app (`nuxt.config.js`) lists workspace modules in the `modules` array. Each module auto-registers its pages, composables, and server handlers when the app starts. Adding a module requires two changes:
 
-```text
-services/<name>/
-├── package.json
-├── nitro.config.js             standalone Nitro config
-├── routes/
-│   └── index.get.js            standalone health check
-├── module/
-│   ├── module.js               defineNuxtModule entry point
-│   └── definitions/
-│       ├── endpoints.js        endpoint list shared by module and nitro config
-│       └── middlewares.js      middleware list
-└── runtime/
-    ├── middleware/             registered in both modes
-    ├── handlers/               registered via addServerHandler (module) or handlers[] (standalone)
-    └── utils/                  explicitly imported by handlers
-```
+1. Add `"@p2pay/<name>": "workspace:*"` to root `package.json` dependencies
+2. Add `'@p2pay/<name>'` to the `modules` array in `nuxt.config.js`
 
-Rails follow the same structure under `runtime/`, with `lib/` for server utilities and `composables/` + `pages/` for client-side injection (Nuxt module mode only).
-
-The host app needs only two changes to add a module:
-
-1. In `package.json`, add `"@p2pay/<name>": "workspace:*"` to `dependencies`
-2. In `nuxt.config.js`, add `'@p2pay/<name>'` to the `modules` array
+`flows/booking` requires `@nuxt/ui`. It must be present in `nuxt.config.js` before or alongside the booking module.
 
 ## Environment variables
 
@@ -92,22 +78,6 @@ The host app needs only two changes to add a module:
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `NUXT_TOR_PROXY_SECRET` | yes | — | Shared secret sent in `X-Tor-Proxy-Secret` header |
-| `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL of the local Tor daemon |
-
-### `services/cors`
-
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `NUXT_CORS_TARGET_URL` | yes | — | Target API base URL |
-| `NUXT_CORS_PROXY_SECRET` | yes | — | Shared secret validated on every request |
-| `NUXT_CORS_HEALTH_PATH` | no | `/` | Path on the target used for the health check |
-
-### `services/market`
-
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `NUXT_TOR_PROXY_SECRET` | yes | — | Auth secret for the inline `/api/market/tor-proxy` handler |
-| `NUXT_ROBOSATS_COORDINATOR_ONION_URL` | no | RoboSats default onion | RoboSats coordinator onion address |
 | `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL of the local Tor daemon |
 
 ### `rails/robosats`
@@ -130,6 +100,18 @@ The host app needs only two changes to add a module:
 | `NUXT_PEACH_REFERRAL_CODE` | no | — | Peach referral code |
 | `NUXT_PEACH_FEE_RATE` | no | `hourFee` | Bitcoin fee rate strategy |
 | `NUXT_PEACH_MAX_PREMIUM` | no | `0` | Maximum accepted offer premium |
+
+### `services/market`
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `NUXT_TOR_PROXY_SECRET` | yes | — | Auth secret for the inline Tor proxy handler |
+| `NUXT_ROBOSATS_COORDINATOR_ONION_URL` | no | RoboSats default onion | RoboSats coordinator onion address |
+| `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL of the local Tor daemon |
+
+## Known issues
+
+- `@nuxt/kit` version mismatch: `rails/peach`, `rails/robosats`, and `services/tor` declare `@nuxt/kit ^3.13.0` while the root app and `rails/template`, `flows/booking` use `^4.0.0`. The modules work in module mode via Nuxt's own kit instance, but full standalone migration to `^4.0.0` is pending.
 
 ## License
 

@@ -6,7 +6,7 @@ const toBoolean = (v) => String(v || '').toLowerCase() === 'true'
 
 export default defineNuxtModule({
   meta: {
-    name: 'tor',
+    name: '@p2pay/tor',
     configKey: 'tor'
   },
 
@@ -32,16 +32,16 @@ export default defineNuxtModule({
       nuxt.options.runtimeConfig.torSocksUrl ?? 'socks5h://127.0.0.1:9050'
 
     const resolver = createResolver(import.meta.url)
+    const prefix = String(options.prefix).replace(/\/+$/, '')
 
+    // Scope the secret middleware to the Tor prefix only, not the entire app
     for (const mw of middlewareDefs) {
       addServerHandler({
         middleware: true,
-        route: '/',
+        route: prefix,
         handler: resolver.resolve(`../runtime/middleware/${mw.file}`)
       })
     }
-
-    const prefix = String(options.prefix).replace(/\/+$/, '')
 
     // Register specific methods before catch-all so Nitro resolves them first
     const specific = endpointDefs.filter(e => e.method !== 'ALL')

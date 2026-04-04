@@ -1,5 +1,5 @@
 export default defineEventHandler(() => {
   return {
-    message: 'hello from apps/mono server/api/index.get.js'
+    message: 'hello from @p2pay/mono'
   }
 })

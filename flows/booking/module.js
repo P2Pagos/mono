@@ -14,9 +14,7 @@ export default defineNuxtModule({
 
     const resolver = createResolver(import.meta.url)
 
-    if (!nuxt.options.modules.includes('@nuxt/ui')) {
-      nuxt.options.modules.push('@nuxt/ui')
-    }
+    // @nuxt/ui must be declared in the host app's nuxt.config.js modules array
 
     addComponentsDir({
       path: resolver.resolve('./runtime/components'),
