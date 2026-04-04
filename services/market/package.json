@@ -1,6 +1,6 @@
 {
-  "name": "@p2pay/robosats",
-  "version": "0.0.1",
+  "name": "@p2pay/market",
+  "version": "0.1.0",
   "author": "Learntheropes <giovanni@learntheropes.xyz>",
   "license": "MIT",
   "type": "module",
@@ -8,9 +8,9 @@
   "files": [
     "runtime",
     "module",
-    "nitro.config.*"
+    "nitro.config.*",
+    "dist"
   ],
-  "main": "./module/module.js",
   "exports": {
     ".": {
       "import": "./module/module.js"
@@ -22,13 +22,14 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
-    "@noble/hashes": "^1.4.0",
-    "@noble/secp256k1": "^2.1.0",
     "@nuxt/kit": "^3.13.0",
-    "@p2pay/tor": "workspace:*",
-    "base-ex": "^0.8.1",
-    "js-sha256": "^0.11.0",
+    "got": "^14.6.6",
+    "lodash.groupby": "^4.6.0",
+    "lodash.maxby": "^4.6.0",
+    "lodash.minby": "^4.6.0",
+    "lodash.sortby": "^4.7.0",
     "nitropack": "latest",
-    "openpgp": "^5.11.2"
+    "ofetch": "^1.4.1",
+    "socks-proxy-agent": "^8.0.5"
   }
 }

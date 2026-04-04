@@ -2,7 +2,7 @@
 
 Monorepo pnpm workspace for the **P2Pay** open-source multi-rail payment software.
 
-Each workspace package is a self-contained Nuxt 4 module. Apps assemble rails, flows, and services by listing them in `nuxt.config.js`, with minimal glue code.
+Each workspace package is a self-contained module. Apps assemble rails, flows, and services by listing them in `nuxt.config.js`, with minimal glue code. Services and rails also run standalone as Nitro servers.
 
 ## Workspace layout
 
@@ -11,7 +11,7 @@ mono/
 ├── apps/       standalone Nuxt applications
 ├── rails/      payment rail modules
 ├── flows/      business flow modules
-├── services/   infrastructure service modules (Tor proxy, CORS proxy)
+├── services/   infrastructure service modules
 ├── utils/      shared utilities
 └── packages/   (reserved)
 ```
@@ -21,17 +21,16 @@ mono/
 | Package | Description |
 |---------|-------------|
 | `@p2pay/mono-app` (`apps/mono`) | Development app — loads all workspace modules for local testing |
-| `@p2pay/market` (`apps/market`) | KYC-free Bitcoin price aggregator — buy/sell offers from Bisq, RoboSats, Peach |
 
 ## Rails
 
-Rails are pluggable payment-rail modules. Each injects pages, composables, and server handlers into the host app.
+Rails are pluggable payment-rail modules. Each injects pages, composables, and server handlers into the host app, and can also run standalone as a Nitro server.
 
 | Package | Page | API | Description |
 |---------|------|-----|-------------|
 | `@p2pay/template` (`rails/template`) | `/rails/template` | `/api/rails/template` | Reference rail — copy this to scaffold a new integration |
 | `@p2pay/peach` (`rails/peach`) | `/rails/peach` | `/api/rails/peach/*` | [Peach](https://peachbitcoin.com) P2P Bitcoin rail |
-| `@p2pay/robosats` (`rails/robosats`) | `/rails/robosats` | `/api/rails/robosats/*` | [RoboSats](https://robosats.com) P2P Bitcoin rail via Tor |
+| `@p2pay/robosats` (`rails/robosats`) | `/rails/robosats` | `/api/rails/robosats/*` | [RoboSats](https://robosats.com) P2P Bitcoin rail — installs `@p2pay/tor` automatically |
 
 ## Flows
 
@@ -43,35 +42,43 @@ Flows are higher-level feature modules: pages, components, composables, and serv
 
 ## Services
 
-Services ship as both a **standalone Nitro app** (deployable to Cloudflare Workers or Docker) and a **Nuxt module** (embeddable into any app in the workspace).
+Services ship as both a **standalone Nitro app** and a **Nuxt module** embeddable into any app in the workspace.
 
 | Package | Routes | Description |
 |---------|--------|-------------|
-| `@p2pay/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Tor reverse proxy — forwards requests to onion URLs via SOCKS5h |
-| `@p2pay/cors` (`services/cors`) | `/api/cors`, `/api/cors/**` | CORS reverse proxy — proxies a target API with secret-based auth |
+| `@p2pay/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Generic Tor reverse proxy — target onion URL set per-request via `X-Tor-Target` header |
+| `@p2pay/cors` (`services/cors`) | `/api/cors`, `/api/cors/**` | CORS reverse proxy — proxies a configured target API with secret-based auth |
+| `@p2pay/market` (`services/market`) | `/api/market/**` | KYC-free Bitcoin price aggregator — buy/sell offers from Bisq, RoboSats, Peach |
 
 ## Quick start
 
 ```bash
 pnpm install
 pnpm dev           # runs apps/mono
-pnpm dev:market    # runs apps/market
 ```
 
 ## Module anatomy
 
-Every rail and flow follows the same pattern:
+Services follow this structure:
 
 ```text
-<type>/<name>/
-├── package.json        name: @p2pay/<name>
-├── module.js           defineNuxtModule — wires pages, handlers, composables
+services/<name>/
+├── package.json
+├── nitro.config.js             standalone Nitro config
+├── routes/
+│   └── index.get.js            standalone health check
+├── module/
+│   ├── module.js               defineNuxtModule entry point
+│   └── definitions/
+│       ├── endpoints.js        endpoint list shared by module and nitro config
+│       └── middlewares.js      middleware list
 └── runtime/
-    ├── pages/          injected via pages:extend hook
-    ├── components/     injected via addComponentsDir (flows only)
-    ├── composables/    injected via addImportsDir
-    └── handlers/       registered via addServerHandler
+    ├── middleware/             registered in both modes
+    ├── handlers/               registered via addServerHandler (module) or handlers[] (standalone)
+    └── utils/                  explicitly imported by handlers
 ```
+
+Rails follow the same structure under `runtime/`, with `lib/` for server utilities and `composables/` + `pages/` for client-side injection (Nuxt module mode only).
 
 The host app needs only two changes to add a module:
 
@@ -80,38 +87,36 @@ The host app needs only two changes to add a module:
 
 ## Environment variables
 
-### `apps/market`
-
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `TOR_PROXY_SECRET` | yes | — | Auth secret for the inline `/api/tor-proxy` handler |
-| `ROBOSATS_COORDINATOR_ONION_URL` | no | RoboSats default onion | RoboSats coordinator onion address |
-| `DEPLOYMENT_DOMAIN` | no | `http://localhost:3000` | Canonical URL used in OG meta tags |
-| `UMAMI_ID` | no | — | Umami analytics site ID |
-| `UMAMI_HOST` | no | — | Umami analytics host URL |
-
 ### `services/tor`
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `NUXT_TOR_PROXY_SECRET` | yes | — | Shared secret validated on every request |
-| `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h proxy URL for the local Tor daemon |
-| `NUXT_ROBOSATS_COORDINATOR_URL` | no | RoboSats default onion | Target onion URL to forward requests to |
+| `NUXT_TOR_PROXY_SECRET` | yes | — | Shared secret sent in `X-Tor-Proxy-Secret` header |
+| `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL of the local Tor daemon |
 
 ### `services/cors`
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `NUXT_CORS_TARGET_URL` | yes | — | Target API base URL, e.g. `https://api.peachbitcoin.com` |
+| `NUXT_CORS_TARGET_URL` | yes | — | Target API base URL |
 | `NUXT_CORS_PROXY_SECRET` | yes | — | Shared secret validated on every request |
-| `NUXT_CORS_HEALTH_PATH` | no | `/` | Path on the target used for the health endpoint |
+| `NUXT_CORS_HEALTH_PATH` | no | `/` | Path on the target used for the health check |
+
+### `services/market`
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `MARKET_TOR_PROXY_SECRET` | yes | — | Auth secret for the inline `/api/market/tor-proxy` handler |
+| `MARKET_ROBOSATS_COORDINATOR_ONION_URL` | no | RoboSats default onion | RoboSats coordinator onion address |
+| `MARKET_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL of the local Tor daemon |
 
 ### `rails/robosats`
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h proxy for Tor |
-| `NUXT_ROBOSATS_COORDINATOR_URL` | no | RoboSats default onion | Coordinator onion address |
+| `ROBOSATS_COORDINATOR_URL` | no | RoboSats default onion | Coordinator onion base URL |
+| `TOR_PROXY_SECRET` | yes | — | Shared secret for the embedded `@p2pay/tor` proxy |
+| `TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL of the local Tor daemon |
 
 ### `rails/peach`
 

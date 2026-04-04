@@ -10,8 +10,6 @@ import {
 import got from 'got'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 
-const ONION_RE = /^https?:\/\/[a-z2-7]{56}\.onion(:\d+)?(\/|$)/i
-
 const HOP_BY_HOP = new Set([
   'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
   'te', 'trailer', 'transfer-encoding', 'upgrade'
@@ -21,31 +19,27 @@ const STRIP_RESPONSE_HEADERS = new Set([
   ...HOP_BY_HOP, 'set-cookie', 'content-encoding', 'content-length'
 ])
 
-function joinUrl(base, path) {
+const joinUrl = (base, path) => {
   const b = base.replace(/\/+$/, '')
   const p = path.startsWith('/') ? path : '/' + path
   return b + p
 }
 
-function sanitizeOutgoingHeaders(incoming) {
+const sanitizeOutgoingHeaders = (incoming) => {
   const headers = { ...incoming }
-
   for (const k of Object.keys(headers)) {
     if (HOP_BY_HOP.has(k.toLowerCase())) delete headers[k]
   }
-
   delete headers.host
   delete headers['content-length']
   delete headers['accept-encoding']
   delete headers.origin
   delete headers.referer
   delete headers['x-tor-proxy-secret']
-  delete headers['x-tor-target']
-
   return headers
 }
 
-function sanitizeIncomingResponseHeaders(inHeaders) {
+const sanitizeResponseHeaders = (inHeaders) => {
   const headers = {}
   for (const [k, v] of Object.entries(inHeaders || {})) {
     const key = String(k).toLowerCase()
@@ -55,30 +49,25 @@ function sanitizeIncomingResponseHeaders(inHeaders) {
 }
 
 export default defineEventHandler(async (event) => {
-  const { torProxySecret, torSocksUrl } = useRuntimeConfig(event)
+  const config = useRuntimeConfig(event)
+  const { torProxySecret, robosatsCoordinatorOnionUrl, torSocksUrl } = config
 
-  if (!torProxySecret) {
+  if (!torProxySecret || !robosatsCoordinatorOnionUrl) {
     setResponseStatus(event, 500)
     return { error: 'Proxy misconfigured' }
   }
 
   const incomingHeaders = getRequestHeaders(event)
-  const torTarget = incomingHeaders['x-tor-target']
 
-  if (!torTarget) {
-    setResponseStatus(event, 400)
-    return { error: 'Missing x-tor-target header' }
-  }
-
-  if (!ONION_RE.test(torTarget)) {
-    setResponseStatus(event, 400)
-    return { error: 'Invalid target: must be a .onion address' }
+  if (incomingHeaders['x-tor-proxy-secret'] !== torProxySecret) {
+    setResponseStatus(event, 403)
+    return { error: 'Forbidden' }
   }
 
   const method = getMethod(event)
   const params = event.context.params._ || ''
   const query = getQuery(event)
-  const targetUrl = joinUrl(torTarget, `/${params}`)
+  const targetUrl = joinUrl(robosatsCoordinatorOnionUrl, `/${params}`)
 
   let body
   if (method !== 'GET' && method !== 'HEAD') {
@@ -100,7 +89,7 @@ export default defineEventHandler(async (event) => {
   })
 
   setResponseStatus(event, resp.statusCode)
-  setResponseHeaders(event, sanitizeIncomingResponseHeaders(resp.headers))
+  setResponseHeaders(event, sanitizeResponseHeaders(resp.headers))
 
   return resp.body
 })

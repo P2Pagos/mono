@@ -6,14 +6,15 @@ const toBoolean = (v) => String(v || '').toLowerCase() === 'true'
 
 export default defineNuxtModule({
   meta: {
-    name: 'tor',
-    configKey: 'tor'
+    name: '@p2pay/market',
+    configKey: 'market'
   },
 
   defaults: {
     enabled: false,
-    prefix: '/api/tor',
+    prefix: '/api/market',
     torProxySecret: undefined,
+    robosatsCoordinatorOnionUrl: undefined,
     torSocksUrl: undefined
   },
 
@@ -24,14 +25,15 @@ export default defineNuxtModule({
     if (options.torProxySecret !== undefined) {
       nuxt.options.runtimeConfig.torProxySecret = options.torProxySecret
     }
-    if (options.torSocksUrl !== undefined) {
-      nuxt.options.runtimeConfig.torSocksUrl = options.torSocksUrl
+    if (options.robosatsCoordinatorOnionUrl !== undefined) {
+      nuxt.options.runtimeConfig.robosatsCoordinatorOnionUrl = options.robosatsCoordinatorOnionUrl
     }
 
     nuxt.options.runtimeConfig.torSocksUrl =
-      nuxt.options.runtimeConfig.torSocksUrl ?? 'socks5h://127.0.0.1:9050'
+      options.torSocksUrl ?? nuxt.options.runtimeConfig.torSocksUrl ?? 'socks5h://127.0.0.1:9050'
 
     const resolver = createResolver(import.meta.url)
+    const prefix = String(options.prefix || '/api/market').replace(/\/+$/, '')
 
     for (const mw of middlewareDefs) {
       addServerHandler({
@@ -41,9 +43,6 @@ export default defineNuxtModule({
       })
     }
 
-    const prefix = String(options.prefix).replace(/\/+$/, '')
-
-    // Register specific methods before catch-all so Nitro resolves them first
     const specific = endpointDefs.filter(e => e.method !== 'ALL')
     const catchAll = endpointDefs.filter(e => e.method === 'ALL')
 

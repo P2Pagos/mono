@@ -1,33 +1,26 @@
-import got from 'got'
-import { SocksProxyAgent } from 'socks-proxy-agent'
-
 export const robosatsRequest = async ({ authorization, method = 'GET', path, body, query }) => {
-  const { robosatsCoordinatorUrl, torSocksUrl } = useRuntimeConfig()
-  const url = `${robosatsCoordinatorUrl}${path}`
+  const { robosatsCoordinatorUrl, torProxySecret, torProxyPrefix } = useRuntimeConfig()
+  const prefix = (torProxyPrefix || '/api/tor').replace(/\/+$/, '')
+  const cleanPath = String(path).replace(/^\//, '')
 
   const headers = {
-    Authorization: authorization,
-    ...(method === 'POST' ? { 'Content-Type': 'application/json' } : {})
+    'x-tor-proxy-secret': torProxySecret,
+    'x-tor-target': robosatsCoordinatorUrl,
+    ...(authorization ? { authorization } : {})
   }
 
   try {
-    const response = await got(url, {
+    return await $fetch(`${prefix}/${cleanPath}`, {
       method,
       headers,
-      searchParams: query,
-      body: method === 'POST' && body ? JSON.stringify(body) : undefined,
-      agent: { http: new SocksProxyAgent(torSocksUrl) },
-      timeout: { request: 15000 },
-      responseType: 'json'
+      query,
+      body: method !== 'GET' && method !== 'HEAD' ? body : undefined
     })
-
-    return response.body
   } catch (error) {
-    console.error('RoboSats API error:', error.response?.body || error.message)
     throw createError({
-      statusCode: 502,
+      statusCode: error.statusCode ?? 502,
       statusMessage: 'RoboSats API error',
-      data: error.response?.body || error.message
+      data: error.data ?? error.message
     })
   }
 }
