@@ -1,4 +1,4 @@
-# p2pay/mono
+# p2payments/mono
 
 `mono` is the orchestrator repo for [P2Payments](https://p2payments.com). It assembles payment rails, business flows, and support services into a single Nuxt-based workspace.
 
