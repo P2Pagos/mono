@@ -1,6 +1,6 @@
-# p2payments/mono
+# p2pagos/mono
 
-`mono` — это репозиторий-оркестратор для [P2Payments](https://github.com/P2Payments). Он объединяет платёжные rails, бизнес-flow и вспомогательные сервисы в одном workspace на базе Nuxt.
+`mono` — это репозиторий-оркестратор для [P2Pagos](https://github.com/P2Pagos). Он объединяет платёжные rails, бизнес-flow и вспомогательные сервисы в одном workspace на базе Nuxt.
 
 Этот репозиторий всё ещё приводится в порядок и должен восприниматься как ранняя база оркестратора, а не как готовый продукт.
 
@@ -26,9 +26,9 @@
 
 | Package | Page | API |
 |---------|------|-----|
-| `@p2payments/template` (`rails/template`) | `/rails/template` | `/api/rails/template` |
-| `@p2payments/peach` (`rails/peach`) | `/rails/peach` | `/api/rails/peach/*` |
-| `@p2payments/robosats` (`rails/robosats`) | `/rails/robosats` | `/api/rails/robosats/*` |
+| `@p2pagos/template` (`rails/template`) | `/rails/template` | `/api/rails/template` |
+| `@p2pagos/peach` (`rails/peach`) | `/rails/peach` | `/api/rails/peach/*` |
+| `@p2pagos/robosats` (`rails/robosats`) | `/rails/robosats` | `/api/rails/robosats/*` |
 
 ### Flows
 
@@ -36,7 +36,7 @@
 
 | Package | Pages |
 |---------|-------|
-| `@p2payments/booking` (`flows/booking`) | `/flows/booking`, `/flows/booking/embed` |
+| `@p2pagos/booking` (`flows/booking`) | `/flows/booking`, `/flows/booking/embed` |
 
 ### Services
 
@@ -44,8 +44,8 @@
 
 | Package | Routes | Notes |
 |---------|--------|-------|
-| `@p2payments/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Tor reverse proxy, отключён по умолчанию |
-| `@p2payments/market` (`services/market`) | `/api/market/**` | Агрегатор офферов без KYC (Bisq, RoboSats, Peach), отключён по умолчанию |
+| `@p2pagos/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Tor reverse proxy, отключён по умолчанию |
+| `@p2pagos/market` (`services/market`) | `/api/market/**` | Агрегатор офферов без KYC (Bisq, RoboSats, Peach), отключён по умолчанию |
 
 ## Чем это не является
 
@@ -66,8 +66,8 @@ pnpm preview
 
 Корневое Nuxt-приложение (`nuxt.config.js`) перечисляет модули workspace в массиве `modules`. Каждый модуль автоматически регистрирует свои страницы, composables и server handlers при запуске приложения. Добавление модуля требует двух изменений:
 
-1. Добавить `"@p2payments/<name>": "workspace:*"` в зависимости корневого `package.json`
-2. Добавить `'@p2payments/<name>'` в массив `modules` в `nuxt.config.js`
+1. Добавить `"@p2pagos/<name>": "workspace:*"` в зависимости корневого `package.json`
+2. Добавить `'@p2pagos/<name>'` в массив `modules` в `nuxt.config.js`
 
 `flows/booking` требует `@nuxt/ui`. Он должен присутствовать в `nuxt.config.js` до или вместе с модулем booking.
 
@@ -85,7 +85,7 @@ pnpm preview
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `NUXT_ROBOSATS_COORDINATOR_URL` | no | onion по умолчанию для RoboSats | Базовый onion URL координатора |
-| `NUXT_TOR_PROXY_SECRET` | yes | — | Общий секрет для встроенного прокси `@p2payments/tor` |
+| `NUXT_TOR_PROXY_SECRET` | yes | — | Общий секрет для встроенного прокси `@p2pagos/tor` |
 | `NUXT_TOR_SOCKS_URL` | no | `socks5h://127.0.0.1:9050` | SOCKS5h URL локального Tor daemon |
 
 ### `rails/peach`
