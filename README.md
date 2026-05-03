@@ -46,7 +46,7 @@ Infrastructure modules that run as both a standalone Nitro app and an embeddable
 
 | Package | Routes | Notes |
 |---------|--------|-------|
-| `@p2pagos/ip-detection` (`services/ip-detection`) | — | Rate limiting + IP geolocation (country, currency), disabled by default |
+| `@p2pagos/ip` (`services/ip`) | — | Rate limiting + IP geolocation (country, currency), disabled by default |
 | `@p2pagos/tor` (`services/tor`) | `/api/tor`, `/api/tor/**` | Tor reverse proxy, disabled by default |
 | `@p2pagos/market` (`services/market`) | `/api/market/**` | KYC-free offer aggregator (Bisq, RoboSats, Peach), disabled by default |
 
@@ -104,7 +104,7 @@ The root Nuxt app (`nuxt.config.js`) lists workspace modules in the `modules` ar
 | `NUXT_PEACH_FEE_RATE` | no | `hourFee` | Bitcoin fee rate strategy |
 | `NUXT_PEACH_MAX_PREMIUM` | no | `0` | Maximum accepted offer premium |
 
-### `services/ip-detection`
+### `services/ip`
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
