@@ -1,17 +1,8 @@
 <script setup>
 const props = defineProps({
-  customMode: {
-    type: String,
-    default: 'light'
-  },
-  customPrimary: {
-    type: String,
-    default: '#3b82f6'
-  },
-  customBackground: {
-    type: String,
-    default: '#ffffff'
-  }
+  customMode: String,
+  customPrimary: String,
+  customBackground: String
 })
 
 const form = reactive({
@@ -54,7 +45,7 @@ const subtotal = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen p-4 sm:p-8" :class="{ dark: isDark }" :style="themeStyles">
+  <div class="min-h-screen p-4 sm:p-8" :class="isDark === null ? '' : isDark ? 'dark' : 'light'" :style="themeStyles">
     <div class="mx-auto w-full max-w-7xl space-y-6">
       <UCard>
         <template #header>
@@ -76,16 +67,13 @@ const subtotal = computed(() => {
           <template #header>
             <h2 class="text-lg font-semibold">Buyer Details</h2>
           </template>
-
           <div class="space-y-4">
             <UFormField label="Name">
               <UInput v-model="form.bookingName" placeholder="Satoshi Nakamoto" />
             </UFormField>
-
             <UFormField label="Email">
               <UInput v-model="form.bookingEmail" type="email" placeholder="you@example.com" />
             </UFormField>
-
             <UFormField label="Details">
               <UTextarea v-model="form.bookingDetails" :rows="4"
                 placeholder="What do you want to cover in this booking?" />
@@ -97,31 +85,25 @@ const subtotal = computed(() => {
           <template #header>
             <h2 class="text-lg font-semibold">Select Date</h2>
           </template>
-
-          <BookingCalendar :custom-mode="props.customMode" :custom-primary="props.customPrimary"
-            :custom-background="props.customBackground" />
+          <BookingCalendar :custom-mode="props.customMode" :custom-primary="props.customPrimary" />
         </UCard>
 
         <UCard>
           <template #header>
             <h2 class="text-lg font-semibold">Select Time & Extras</h2>
           </template>
-
           <div class="space-y-4">
             <UFormField label="Time slot">
               <USelect v-model="form.timeSlot" :items="timeSlots" />
             </UFormField>
-
             <UFormField label="Extras">
               <USelectMenu v-model="selectedExtras" :items="extras" value-key="value" label-key="label" multiple
                 placeholder="Choose optional extras" />
             </UFormField>
-
             <div class="rounded-md border border-default p-3">
               <p class="text-sm text-muted">Estimated total</p>
               <p class="text-2xl font-bold">${{ subtotal }}</p>
             </div>
-
             <UButton color="primary" block>Continue to Payment</UButton>
           </div>
         </UCard>

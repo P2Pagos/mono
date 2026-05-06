@@ -14,6 +14,7 @@
   "dependencies": {
     "nuxt": "^4.0.0",
     "@nuxt/ui": "^3.0.0",
+    "tailwindcss": "^4.0.0",
     "@p2pagos/ip": "workspace:*",
     "@p2pagos/template": "workspace:*",
     "@p2pagos/peach": "workspace:*",

@@ -1,33 +1,21 @@
 <script setup>
 import { CalendarDate } from '@internationalized/date'
-import { shallowRef } from 'vue'
 
 const props = defineProps({
-  customMode: {
-    type: String,
-    default: 'light'
-  },
-  customPrimary: {
-    type: String,
-    default: '#3b82f6'
-  },
-  customBackground: {
-    type: String,
-    default: '#ffffff'
-  }
+  customMode: String,
+  customPrimary: String
 })
 
 const selectedDate = shallowRef(new CalendarDate(2026, 3, 22))
 
 const { isDark, themeStyles } = useCustomTheme({
   mode: () => props.customMode,
-  primary: () => props.customPrimary,
-  background: () => props.customBackground
+  primary: () => props.customPrimary
 })
 </script>
 
 <template>
-  <div class="rounded-lg p-2" :class="{ dark: isDark }" :style="themeStyles">
+  <div class="rounded-lg p-2" :class="isDark === null ? '' : isDark ? 'dark' : 'light'" :style="themeStyles">
     <UCalendar v-model="selectedDate" color="primary" class="w-full" />
   </div>
 </template>

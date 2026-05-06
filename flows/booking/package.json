@@ -5,11 +5,24 @@
   "license": "MIT",
   "type": "module",
   "main": "./module.js",
+  "style": "./runtime/index.css",
   "exports": {
-    ".": "./module.js"
+    ".": {
+      "style": "./runtime/index.css",
+      "import": "./module.js"
+    }
+  },
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "preview": "nuxi preview"
   },
   "dependencies": {
     "@nuxt/kit": "^4.0.0"
+  },
+  "devDependencies": {
+    "nuxt": "^4.0.0",
+    "@nuxt/ui": "^3.0.0"
   },
   "peerDependencies": {
     "@nuxt/ui": "^3.0.0"

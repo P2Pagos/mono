@@ -37,3 +37,37 @@ export default defineNuxtConfig({
   modules: ['@p2pagos/booking']
 })
 ```
+
+## Embed theming
+
+The `/flows/booking/embed` page accepts three optional query params:
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `customMode` | `light` \| `dark` | Forces light or dark mode. Omit to follow system preference. |
+| `customPrimary` | color | Primary/accent color. Accepts hex (`0ea5e9`), named (`violet`), or any CSS color. |
+| `customBackground` | color | Base background color for all widget surfaces. Derives `elevated`, `muted`, `accented`, and `border` shades automatically via `color-mix`. Requires `customMode` to take effect. |
+
+`customBackground` overrides the Nuxt UI `--ui-bg` CSS variable family — cards, inputs, dropdowns, and borders all derive from it. Without `customMode` it has no effect because the mix direction (toward white or black) cannot be determined.
+
+### Examples
+
+Default dark mode with amber primary (Nuxt UI dark blue background):
+```
+/flows/booking/embed?customMode=dark&customPrimary=f59e0b
+```
+
+Dark mode with custom brown background and amber primary:
+```
+/flows/booking/embed?customMode=dark&customPrimary=f59e0b&customBackground=3d1a00
+```
+
+Light mode with custom primary, no background override:
+```
+/flows/booking/embed?customMode=light&customPrimary=0ea5e9
+```
+
+No params — follows system dark/light preference and Nuxt UI default colors:
+```
+/flows/booking/embed
+```

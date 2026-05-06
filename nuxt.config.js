@@ -11,5 +11,7 @@ export default defineNuxtConfig({
   ipDetection: {
     enabled: true,
     currency: true
-  }
+  },
+
+  css: ['~/assets/css/main.css']
 })

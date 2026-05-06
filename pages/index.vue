@@ -24,10 +24,10 @@
       </li>
     </ul>
 
-    <p><small>Source: <code>/api/index</code></small></p>
+    <p><small>Source: <code>/api</code></small></p>
   </main>
 </template>
 
 <script setup>
-const { data } = await useFetch('/api/index')
+const { data } = await useFetch('/api')
 </script>
