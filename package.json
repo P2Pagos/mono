@@ -1,10 +1,11 @@
 {
   "name": "@p2pagos/mono",
-  "version": "0.1.0",
-  "author": "p2pagos",
-  "license": "MIT",
-  "private": true,
+  "description": "Orchestrator repo for P2Pagos. It assembles payment rails, business flows, and support services into a single Nuxt-based workspace.",
   "type": "module",
+  "private": true,
+  "author": "p2pagos & learntheropes",
+  "license": "MIT",
+  "version": "0.1.0",
   "packageManager": "pnpm@9.12.3",
   "scripts": {
     "dev": "nuxi dev",

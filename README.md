@@ -1,4 +1,7 @@
-[Español](README.es.md) | [Português](README.pt.md)
+[Español](README.es.md) | [Português](README.pt.md)  
+
+
+[![AI generated doc](https://deepwiki.com/badge.svg)](https://deepwiki.com/P2Pagos/mono)
 
 # p2pagos/mono
 
